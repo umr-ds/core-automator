@@ -36,10 +36,9 @@ def playback(filename, nodemap, loop=False, init_pos=False):
                 step_number += 1
                 print "step: " + str(step_number)                
             if len(fields) == 3:                
-                cmd = "coresendmsg -T node number=" + nodemap[fields[0]] + " xpos=" + fields[1] + " ypos=" + fields[2]
+                cmd = "coresendmsg node number=" + nodemap[fields[0]] + " xpos=" + fields[1] + " ypos=" + fields[2]
                 print cmd
                 (ret, val) = commands.getstatusoutput(cmd)
-                time.sleep(0.05)
 
 
 def usage():
