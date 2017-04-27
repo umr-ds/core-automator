@@ -1,0 +1,182 @@
+node n1 {
+    type router
+    model PC
+    network-config {
+	hostname robot1
+	!
+	interface eth0
+	 ipv6 address 2001:0::20/128
+	 ip address 10.0.0.20/24
+	!
+    }
+    canvas c1
+    iconcoords {89.0 236.0}
+    labelcoords {89.0 268.0}
+    interface-peer {eth0 n7}
+}
+
+node n2 {
+    type router
+    model PC
+    network-config {
+	hostname drone1
+	!
+	interface eth0
+	 ipv6 address 2001:0::21/128
+	 ip address 10.0.0.21/24
+	!
+    }
+    canvas c1
+    iconcoords {205.0 104.0}
+    labelcoords {205.0 136.0}
+    interface-peer {eth0 n7}
+}
+
+node n3 {
+    type router
+    model PC
+    network-config {
+	hostname drone2
+	!
+	interface eth0
+	 ipv6 address 2001:0::22/128
+	 ip address 10.0.0.22/24
+	!
+    }
+    canvas c1
+    iconcoords {322.0 52.0}
+    labelcoords {322.0 84.0}
+    interface-peer {eth0 n7}
+}
+
+node n4 {
+    type router
+    model PC
+    network-config {
+	hostname drone4
+	!
+	interface eth0
+	 ipv6 address 2001:0::23/128
+	 ip address 10.0.0.23/24
+	!
+    }
+    canvas c1
+    iconcoords {294.0 172.0}
+    labelcoords {294.0 204.0}
+    interface-peer {eth0 n7}
+}
+
+node n5 {
+    type router
+    model PC
+    network-config {
+	hostname drone3
+	!
+	interface eth0
+	 ipv6 address 2001:0::24/128
+	 ip address 10.0.0.24/24
+	!
+    }
+    canvas c1
+    iconcoords {380.0 132.0}
+    labelcoords {380.0 164.0}
+    interface-peer {eth0 n7}
+}
+
+node n6 {
+    type router
+    model PC
+    network-config {
+	hostname center1
+	!
+	interface eth0
+	 ipv6 address 2001:0::25/128
+	 ip address 10.0.0.25/24
+	!
+    }
+    canvas c1
+    iconcoords {763.0 276.0}
+    labelcoords {763.0 308.0}
+    interface-peer {eth0 n7}
+}
+
+node n7 {
+    type wlan
+    network-config {
+	hostname wlan7
+	!
+	interface wireless
+	 ipv6 address 2001:0::0/128
+	 ip address 10.0.0.0/24
+	!
+	mobmodel
+	coreapi
+	basic_range
+	!
+    }
+    custom-config {
+	custom-config-id basic_range
+	custom-command {3 3 9 9 9}
+	config {
+	range=275
+	bandwidth=54000000
+	jitter=0
+	delay=20000
+	error=0
+	}
+    }
+    canvas c1
+    iconcoords {404.0 432.0}
+    labelcoords {404.0 464.0}
+    interface-peer {e0 n1}
+    interface-peer {e1 n2}
+    interface-peer {e2 n3}
+    interface-peer {e3 n4}
+    interface-peer {e4 n5}
+    interface-peer {e5 n6}
+}
+
+link l1 {
+    nodes {n7 n1}
+}
+
+link l2 {
+    nodes {n7 n2}
+}
+
+link l3 {
+    nodes {n7 n3}
+}
+
+link l4 {
+    nodes {n7 n4}
+}
+
+link l5 {
+    nodes {n7 n5}
+}
+
+link l6 {
+    nodes {n7 n6}
+}
+
+canvas c1 {
+    name {Canvas1}
+}
+
+option global {
+    interface_names no
+    ip_addresses yes
+    ipv6_addresses no
+    node_labels yes
+    link_labels yes
+    show_api no
+    background_images no
+    annotations yes
+    grid yes
+    traffic_start 0
+}
+
+option session {
+}
+

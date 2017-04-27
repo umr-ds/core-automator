@@ -1,0 +1,59 @@
+# example movement file
+# initial node placement
+
+robot1 50 50
+drone1 100 50
+drone2 200 150
+drone3 350 150
+drone4 400 250
+center1 763 276
+
+-- STEP
+robot1 55 50
+drone1 110 50
+drone2 200 170
+drone3 350 130
+drone4 370 250
+
+-- STEP
+robot1 60 50
+drone1 120 50
+drone2 210 190
+drone3 360 120
+drone4 420 250
+
+-- STEP
+robot1 65 50
+drone1 130 70
+drone2 230 200
+drone3 370 120
+drone4 440 250
+
+-- STEP
+robot1 70 50
+drone1 130 70
+drone2 230 210
+drone3 380 120
+drone4 460 250
+
+-- STEP
+robot1 75 50
+drone1 130 70
+drone2 230 230
+drone3 390 120
+drone4 480 250
+
+-- STEP
+robot1 75 55
+drone1 130 70
+drone2 230 250
+drone3 400 120
+drone4 500 250
+
+-- STEP
+robot1 75 60
+drone1 150 70
+drone2 250 250
+drone3 420 120
+drone4 520 250
+
