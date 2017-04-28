@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# core-automator - replay of core node positions
+# Written by Lars Baumgaertner (c) 2017
+
 import sys
 import commands
 import time
