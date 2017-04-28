@@ -24,8 +24,23 @@ def get_nodes(session_number):
         nodes[entries[1]] = entries[0]
     return nodes
 
+def replay_parsed(step_list):
+    while True:
+        print "REVERSE LOOP"
+        step_list = list(reversed(step_list))
+        count = 0
+        for steps in step_list:
+            count += 1
+            for node in steps:
+                cmd = "coresendmsg node number=" + node[0] + " xpos=" + node[1] + " ypos=" + node[2]
+                (ret, val) = commands.getstatusoutput(cmd)
+            print "step ", count
+            time.sleep(1)
+
 def playback(filename, nodemap, loop=False, init_pos=False):
     step_number=0
+    step_list = []
+    step_moves = []
     with open(filename, "r") as f:
         for line in f:
             line=line.strip()
@@ -38,16 +53,23 @@ def playback(filename, nodemap, loop=False, init_pos=False):
                 time.sleep(1)
                 step_number += 1
                 print "step: " + str(step_number)                
+                step_list.append(step_moves)
+                step_moves=[]                
             if len(fields) == 3:                
-                cmd = "coresendmsg node number=" + nodemap[fields[0]] + " xpos=" + fields[1] + " ypos=" + fields[2]
-                print cmd
+                node = nodemap[fields[0]]
+                xpos = fields[1]
+                ypos = fields[2]
+                cmd = "coresendmsg node number=" + node + " xpos=" + xpos + " ypos=" + ypos
+                #print cmd
                 (ret, val) = commands.getstatusoutput(cmd)
-
+                step_moves.append((node,xpos,ypos))
+    if loop:
+        replay_parsed(step_list)
 
 def usage():
     print sys.argv[0] + ' [param] -f <inputfile>'
     print " -f <inputfile> recorded movements"
-    print " -l loop (not implemented yet)"
+    print " -l loop"
     print " -i set initial positions"    
 
 if __name__ == "__main__":
