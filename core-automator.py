@@ -7,6 +7,7 @@ import sys
 import commands
 import time
 import getopt
+import string
 
 def get_session():
     sessions = []
@@ -24,7 +25,7 @@ def get_nodes(session_number):
         nodes[entries[1]] = entries[0]
     return nodes
 
-def replay_parsed(step_list):
+def replay_parsed(step_list, session):
     while True:
         print "REVERSE LOOP"
         step_list = list(reversed(step_list))
@@ -34,10 +35,14 @@ def replay_parsed(step_list):
             for node in steps:
                 cmd = "coresendmsg node number=" + node[0] + " xpos=" + node[1] + " ypos=" + node[2]
                 (ret, val) = commands.getstatusoutput(cmd)
+                if node[4] != "":                    
+                    cmd = "vcmd -c /tmp/pycore." + session + "/" + node[3] + " -- bash -c '" + node[4] + "'"
+                    (ret, val) = commands.getstatusoutput(cmd)
+
             print "step ", count
             time.sleep(1)
 
-def playback(filename, nodemap, loop=False, init_pos=False):
+def playback(filename, nodemap, session, loop=False, init_pos=False):
     step_number=0
     step_list = []
     step_moves = []
@@ -55,16 +60,25 @@ def playback(filename, nodemap, loop=False, init_pos=False):
                 print "step: " + str(step_number)                
                 step_list.append(step_moves)
                 step_moves=[]                
-            if len(fields) == 3:                
+            if len(fields) >= 3:
                 node = nodemap[fields[0]]
                 xpos = fields[1]
                 ypos = fields[2]
+
                 cmd = "coresendmsg node number=" + node + " xpos=" + xpos + " ypos=" + ypos
                 #print cmd
                 (ret, val) = commands.getstatusoutput(cmd)
-                step_moves.append((node,xpos,ypos))
+                exec_cmd = ""
+                if len(fields) > 3:
+                    exec_cmd = string.join(fields[3:], " ")
+                    cmd = "vcmd -c /tmp/pycore." + session + "/" + fields[0] + " -- bash -c '" + exec_cmd + "'"
+                    #print "EXEC: ", exec_cmd
+                    #print cmd
+                    (ret, val) = commands.getstatusoutput(cmd)
+                    print ret, val 
+                step_moves.append((node,xpos,ypos, fields[0], exec_cmd))
     if loop:
-        replay_parsed(step_list)
+        replay_parsed(step_list, session)
 
 def usage():
     print sys.argv[0] + ' [param] -f <inputfile>'
@@ -108,4 +122,4 @@ if __name__ == "__main__":
 
     node_map = get_nodes(s_list[0])
 
-    playback(playbackfile, node_map, loop, init_pos)
+    playback(playbackfile, node_map, s_list[0], loop, init_pos)

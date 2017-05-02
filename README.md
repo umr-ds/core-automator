@@ -24,7 +24,7 @@ Empty lines are ignored.
 
 `-- STEP` Marks the end of a movement block, sleep is triggered
 
-`<node_name> <int_x> <int_y>` describes the position of a node
+`<node_name> <int_x> <int_y> [command(s) to be executed on node]` describes the position of a node and triggers command execution
 
 Example movement log:
 ```
@@ -33,7 +33,7 @@ Example movement log:
 robot1 50 50
 drone1 100 50
 drone2 200 150
-drone3 350 150
+drone3 350 150 hostname > /tmp/h
 drone4 400 250
 center1 763 276
 
