@@ -25,30 +25,36 @@ def get_nodes(session_number):
         nodes[entries[1]] = entries[0]
     return nodes
 
-def replay_parsed(step_list, session, loop=False, init_pos=False, delay=1.0):
+def play_step(scenario, step_number):
+    step_list = scenario["step_list"]
+    session = scenario["session"]    
+    delay = scenario["delay"]
+    for node in step_list[step_number]:
+        cmd = "coresendmsg node number=" + node[0] + " xpos=" + node[1] + " ypos=" + node[2]
+        (ret, val) = commands.getstatusoutput(cmd)
+        if node[4] != "":                    
+            cmd = "vcmd -c /tmp/pycore." + session + "/" + node[3] + " -- bash -c '" + node[4] + "'"
+            (ret, val) = commands.getstatusoutput(cmd)
+
+def replay_parsed(scenario, loop = False):
+    step_list = scenario["step_list"]
+    session = scenario["session"]    
+    delay = scenario["delay"]
     while True:        
         count = 0
-        for steps in step_list:
-            count += 1
-            for node in steps:
-                cmd = "coresendmsg node number=" + node[0] + " xpos=" + node[1] + " ypos=" + node[2]
-                (ret, val) = commands.getstatusoutput(cmd)
-                if node[4] != "":                    
-                    cmd = "vcmd -c /tmp/pycore." + session + "/" + node[3] + " -- bash -c '" + node[4] + "'"
-                    (ret, val) = commands.getstatusoutput(cmd)
-            if init_pos == True:
-                    sys.exit()
-
-            print "step ", count
+        for i in range(len(step_list)):
+            play_step(scenario, i)
+            print "step ", i
             time.sleep(delay)
+        
         if loop == True:
             print "REVERSE LOOP"
-            step_list = list(reversed(step_list))
+            scenario["step_list"] = list(reversed(step_list))
         else:
             break
 
 
-def playback(filename, nodemap, session, loop=False, init_pos=False, cmd_delay=1.0, cmd_delay_set=False):
+def load_posfile(filename, nodemap, session, cmd_delay=1.0, cmd_delay_set=False):
     step_number=0
     step_list = []
     step_moves = []
@@ -77,23 +83,28 @@ def playback(filename, nodemap, session, loop=False, init_pos=False, cmd_delay=1
     
     if cmd_delay_set == True:
         delay = cmd_delay
-    replay_parsed(step_list, session, loop, init_pos, delay)
+    scenario = {"session": session,                 
+        "delay": delay, 
+        "step_list": step_list}
+    return scenario     
 
 def usage():
     print sys.argv[0] + ' [param] -f <inputfile>'
     print " -f <inputfile> recorded movements"
     print " -d <delay> delay between steps (seconds as float)"
     print " -l loop"
-    print " -i set initial positions"    
+    print " -i set initial positions"
+    print " -s <int_step> load specific step (range: 0..MAXSTEP-1)"    
 
 if __name__ == "__main__":
     playbackfile = ''
     loop = False
     init_pos = False
+    set_step = -1
     delay = 1.0
     delay_set = False
     try:
-        opts, args = getopt.getopt(sys.argv[1:],"hf:lid:",["file=","delay="])
+        opts, args = getopt.getopt(sys.argv[1:],"hf:lid:s:",["file=","delay=","step="])
     except getopt.GetoptError:
       usage()
       sys.exit(2)
@@ -107,6 +118,8 @@ if __name__ == "__main__":
         elif opt in ("-d", "--delay"):
             delay = float(arg)
             delay_set = True
+        elif opt in ("-s", "--step"):
+            set_step = int(arg)            
         elif opt == "-l":
             loop = True
         elif opt == "-i":
@@ -127,4 +140,10 @@ if __name__ == "__main__":
 
     node_map = get_nodes(s_list[0])
 
-    playback(playbackfile, node_map, s_list[0], loop, init_pos, delay, delay_set)
+    scenario = load_posfile(playbackfile, node_map, s_list[0], delay, delay_set)
+    if init_pos:
+        play_step(scenario, 0)
+    elif set_step >= 0:
+        play_step(scenario, set_step)
+    else:
+        replay_parsed(scenario, loop)
