@@ -10,11 +10,18 @@ Various helper scripts to automate node movement in [CORE](https://www.nrl.navy.
 * Nodes must be placed on grid using `core-gui`
 * Session must already be started
 
+For `core-mobility-studio` additionally:
+* python-tk
+* idle
+* [appjar](https://github.com/jarvisteach/appJar)
+
 ## Scripts
 
 `core-record.py` - record current node layout to a file (default: appending)
 
 `core-automator.py` - replay a recorded position file, sleep between steps (default: 1s)
+
+`core-mobility-studio.py` - simple tk GUI to record and playback position files
 
 ## Record File Format
 
