@@ -1,7 +1,9 @@
 # example movement file
 # initial node placement
 
-robot1 50 50
+%delay 0.5
+
+robot1 50 50 hostname > myhost
 drone1 100 50
 drone2 200 150
 drone3 350 150

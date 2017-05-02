@@ -22,6 +22,8 @@ Empty lines are ignored.
 
 `#` Mark a comment - only allowed at the beginning of a line
 
+`%delay <float_delay_seconds>` time to wait between steps, can be overriden by `-d` flag on command line
+
 `-- STEP` Marks the end of a movement block, sleep is triggered
 
 `<node_name> <int_x> <int_y> [command(s) to be executed on node]` describes the position of a node and triggers command execution
@@ -30,10 +32,12 @@ Example movement log:
 ```
 # initial node placement
 
-robot1 50 50
+%delay 0.5
+
+robot1 50 50 hostname > myhost
 drone1 100 50
 drone2 200 150
-drone3 350 150 hostname > /tmp/h
+drone3 350 150 
 drone4 400 250
 center1 763 276
 
