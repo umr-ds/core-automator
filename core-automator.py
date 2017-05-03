@@ -72,7 +72,9 @@ def load_posfile(filename, nodemap, session, cmd_delay=1.0, cmd_delay_set=False)
                 step_list.append(step_moves)
                 step_moves=[]                
             if len(fields) >= 3:
-                node = nodemap[fields[0]]
+                try: node = nodemap[fields[0]]
+                # skip the step, if the node is not available
+                except KeyError: continue
                 xpos = fields[1]
                 ypos = fields[2]
 
