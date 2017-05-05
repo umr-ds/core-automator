@@ -33,7 +33,7 @@ Empty lines are ignored.
 
 `-- STEP` Marks the end of a movement block, sleep is triggered
 
-`<node_name> <int_x> <int_y> [command(s) to be executed on node]` describes the position of a node and triggers command execution
+`<node_name> <int_x> <int_y> [command(s) to be executed on node]` describes the position of a node and triggers command execution, if `int_x` or `int_y` are set to `-` no position update is done but commands still get executed. 
 
 Example movement log:
 ```

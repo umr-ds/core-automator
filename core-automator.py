@@ -30,8 +30,9 @@ def play_step(scenario, step_number):
     session = scenario["session"]    
     delay = scenario["delay"]
     for node in step_list[step_number]:
-        cmd = "coresendmsg node number=" + node[0] + " xpos=" + node[1] + " ypos=" + node[2]
-        (ret, val) = commands.getstatusoutput(cmd)
+        if node[1] != '-' and node[2] != '-':
+            cmd = "coresendmsg node number=" + node[0] + " xpos=" + node[1] + " ypos=" + node[2]
+            (ret, val) = commands.getstatusoutput(cmd)        
         if node[4] != "":                    
             cmd = "vcmd -c /tmp/pycore." + session + "/" + node[3] + " -- bash -c '" + node[4] + "'"
             (ret, val) = commands.getstatusoutput(cmd)
