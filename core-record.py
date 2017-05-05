@@ -9,37 +9,7 @@ import time
 import getopt
 import glob
 import re
-
-def get_session():
-    sessions = []
-    (ret, val) = commands.getstatusoutput("coresendmsg -T -l sess flags=str,txt")
-    for line in val.split("\n"):
-        if "CORE_TLV_SESS_NUMBER" in line:
-            sessions.append(line.split(":")[1].strip())
-    return sessions
-
-def get_nodes_by_id(session_number):
-    nodes = {}
-    lines = [line.rstrip('\n') for line in open("/tmp/pycore." + session_number + "/nodes")]
-    for l in lines:
-        entries = l.split(" ")
-        nodes[entries[0]] = entries[1]
-    return nodes
-
-def record(filename, nodemap, session, clear=False):
-    mode = "a"
-    if clear:
-        mode = "w"
-    
-    with open(filename, mode) as out:
-        for f in glob.glob("/tmp/pycore." + session + "/*.xy"):
-            m = re.search("/n(\d+).xy$", f)
-            node_name = nodemap[m.group(1)]
-            with open(f, "r") as xy:
-                coord = xy.read().strip().split()
-                print f, node_name, coord                
-                out.write(node_name + " " + coord[0].split(".")[0] + " " + coord[1].split(".")[0] +"\n")
-        out.write("-- STEP\n")
+from coreposlib import *
 
 def usage():
     print sys.argv[0] + ' [param] -f <inputfile>'
