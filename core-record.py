@@ -12,15 +12,17 @@ import re
 from coreposlib import *
 
 def usage():
-    print sys.argv[0] + ' [param] -f <inputfile>'
-    print " -f <inputfile> recorded movements"
-    print " -c clear"        
+    print sys.argv[0] + ' [param] -f <pos_file>'
+    print " -f <pos_file> recorded movements"
+    print " -e empty file, create a new one"
+    print " -c <core_session_number> control specific session (default: first session)"        
 
 if __name__ == "__main__":
     playbackfile = ''
-    clear = False    
+    clear = False
+    session = ""    
     try:
-        opts, args = getopt.getopt(sys.argv[1:],"hf:c",["file="])
+        opts, args = getopt.getopt(sys.argv[1:],"hf:c:e",["file=","core-session="])
     except getopt.GetoptError:
       usage()
       sys.exit(2)
@@ -31,8 +33,10 @@ if __name__ == "__main__":
             sys.exit()
         elif opt in ("-f", "--file"):
             playbackfile = arg
-        elif opt == "-c":
-            clear = True        
+        elif opt == "-e":
+            clear = True   
+        elif opt in ("-c", "--core-session"):
+            session = arg     
         else:
             usage()
             sys.exit(1)
@@ -43,10 +47,17 @@ if __name__ == "__main__":
 
     s_list = get_session()
 
-    if len(s_list) != 1:
+    if len(s_list) != 1 and session == "":
         print "Error: Need excatly one running session!\n"
         sys.exit()
 
-    node_map = get_nodes_by_id(s_list[0])
+    if session == "":
+        session = s_list[0]
+    else:
+        if not session in s_list:
+            print "Error: Invalid session ", session
+            sys.exit()
 
-    record(playbackfile, node_map, s_list[0], clear)
+    node_map = get_nodes_by_id(session)
+
+    record(playbackfile, node_map, session, clear)
