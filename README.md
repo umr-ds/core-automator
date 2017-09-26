@@ -63,3 +63,7 @@ drone4 420 250
 ```
 
 **Note:** Node *center1* is only mentioned in the initial setup, no movement is applied later on as this node is meant to be static.
+
+## Demo 
+
+![Animated Gif showing a core-automator scenario](core-automator-running.gif)
