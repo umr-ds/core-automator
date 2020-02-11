@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 
 # core-automator - replay of core node positions
 # Written by Lars Baumgaertner (c) 2017

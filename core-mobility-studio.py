@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
 
 # core-mobility-studio
 # Written by Lars Baumgaertner (c) 2017
